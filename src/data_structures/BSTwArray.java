@@ -12,12 +12,18 @@ public class BSTwArray {
 	private final int right = 2;
 	private int rootIndex;
 	private int avail;
-	private int [][] array;
+	private final int insertC;
+	private final int findC;
+	private final int rangeC;
+	private final int [][] array;
 	
-	public BSTwArray(int size) {
+	public BSTwArray(int size, int insertC, int findC, int rangeC) {
 		this.array = new int [size][3];
 		this.rootIndex = -1;			//empty tree
 		this.avail = 0;					//empty tree
+		this.insertC = insertC;
+		this.findC = findC;
+		this.rangeC = rangeC;
 		for(int i = 0; i < size; i++) {
 			array[i][info] = -1;
 			array[i][left] = -1;
@@ -28,12 +34,12 @@ public class BSTwArray {
 	
 	
 	public void getArray() {
-		for(int i = 0; i <array.length; i++) {
-			for(int j = 0; j < 3; j++) {
-				System.out.print(array[i][j]+" ");
-			}
-			System.out.println();
-		}
+        for (int[] rows : array) {
+            for (int j = 0; j < 3; j++) {
+                System.out.print(rows[j] + " ");
+            }
+            System.out.println();
+        }
 	}
 
 	public void insert(int val) {
@@ -43,18 +49,18 @@ public class BSTwArray {
 		return this.rootIndex;
 	}
 	public int inserthelp(int rootIndex, int val) {	//counter 0 for insertion in bst
-		if(MultiCounter.increaseCounter(1) && avail == -1) { 
+		if(MultiCounter.increaseCounter(insertC) && avail == -1) {
 			System.out.println("Maximum memory reached. Can't insert more elements");
 		}
-		else if(MultiCounter.increaseCounter(1) && avail == 0) {	//empty tree
+		else if(MultiCounter.increaseCounter(insertC) && avail == 0) {	//empty tree
 			rootIndex = 0;
 			avail = array[rootIndex][right];
 			array[rootIndex][info] = val;
 			array[rootIndex][right] = -1;			//new node has no children, left is already == -1
 			return rootIndex;
 		}
-		else if(MultiCounter.increaseCounter(1) && array[rootIndex][info] > val) {		//value < root
-			if(MultiCounter.increaseCounter(1) && array[rootIndex][left] == -1) {		//root has no left child
+		else if(MultiCounter.increaseCounter(insertC) && array[rootIndex][info] > val) {		//value < root
+			if(MultiCounter.increaseCounter(insertC) && array[rootIndex][left] == -1) {		//root has no left child
 				array[rootIndex][left] = avail;		
 				array[avail][info] = val;			//insert left child of root
 				avail = array[avail][right];		//avail points to next available position of array
@@ -63,12 +69,12 @@ public class BSTwArray {
 				//return rootIndex;
 			}
 			else {
-				MultiCounter.increaseCounter(1);
+				MultiCounter.increaseCounter(insertC);
 				inserthelp(array[rootIndex][left], val);
 			}
 		}
 		else{										//value >= root
-			if(MultiCounter.increaseCounter(1) && array[rootIndex][right] == -1) {		//root has no right child
+			if(MultiCounter.increaseCounter(insertC) && array[rootIndex][right] == -1) {		//root has no right child
 				array[rootIndex][right] = avail;		
 				array[avail][info] = val;			//insert right child of root
 				avail = array[avail][right];		//avail points to next available position of array
@@ -77,7 +83,7 @@ public class BSTwArray {
 				//return rootIndex;
 			}
 			else {
-				MultiCounter.increaseCounter(1);
+				MultiCounter.increaseCounter(insertC);
 				inserthelp(array[rootIndex][right], val);
 			}
 		}
@@ -90,20 +96,20 @@ public class BSTwArray {
 	}
 	
 	private int findhelp(int rootIndex, int key) {
-		if (MultiCounter.increaseCounter(3) && rootIndex == -1) {				//Multicounter 3
+		if (MultiCounter.increaseCounter(findC) && rootIndex == -1) {				//Multicounter 3
 			//System.out.println("Key: "+key+" not found");	
-			MultiCounter.increaseCounter(3);
+			MultiCounter.increaseCounter(findC);
 			return Integer.MIN_VALUE;
 		}
-		if (MultiCounter.increaseCounter(3) && array[rootIndex][info] > key) {
-			MultiCounter.increaseCounter(3);
+		if (MultiCounter.increaseCounter(findC) && array[rootIndex][info] > key) {
+			MultiCounter.increaseCounter(findC);
 			return findhelp(array[rootIndex][left], key);}
-		else if (MultiCounter.increaseCounter(3) && array[rootIndex][info] == key) {
+		else if (MultiCounter.increaseCounter(findC) && array[rootIndex][info] == key) {
 			//System.out.println("Key: "+key+" found");
 			return array[rootIndex][info];
 		}
 		else {
-			MultiCounter.increaseCounter(3);
+			MultiCounter.increaseCounter(findC);
 			return findhelp(array[rootIndex][right], key);}
 		}
 	
@@ -129,25 +135,25 @@ public class BSTwArray {
 	public void printRange(int low, int high) {	//Multicounter 6
 		//System.out.print("\nPrint keys between " + low + " and " + high +": ");
 		//increase counter for every method call except for first call from main
-		MultiCounter.increaseCounter(6);
+		MultiCounter.increaseCounter(rangeC);
 		printrangehelp(rootIndex, low, high);
 		//System.out.println();
 	}
 	
 	private void printrangehelp(int rootIndex, int low, int high) {
-		if (MultiCounter.increaseCounter(6) && rootIndex == -1)
+		if (MultiCounter.increaseCounter(rangeC) && rootIndex == -1)
 			return;
-		if (MultiCounter.increaseCounter(6) && high < array[rootIndex][info]) { // all to left
-			MultiCounter.increaseCounter(6);
+		if (MultiCounter.increaseCounter(rangeC) && high < array[rootIndex][info]) { // all to left
+			MultiCounter.increaseCounter(rangeC);
 			printrangehelp(array[rootIndex][left], low, high);}
-		else if (MultiCounter.increaseCounter(6) && low > array[rootIndex][info]) { // all to right
-			MultiCounter.increaseCounter(6);
+		else if (MultiCounter.increaseCounter(rangeC) && low > array[rootIndex][info]) { // all to right
+			MultiCounter.increaseCounter(rangeC);
 			printrangehelp(array[rootIndex][right], low, high);}
 		else { // Must process both children
-			MultiCounter.increaseCounter(6);
+			MultiCounter.increaseCounter(rangeC);
 			printrangehelp(array[rootIndex][left], low, high);
 		//System.out.print(" " + array[rootIndex][info]);
-			MultiCounter.increaseCounter(6);
+			MultiCounter.increaseCounter(rangeC);
 		printrangehelp(array[rootIndex][right], low, high);
 		}
 	}
